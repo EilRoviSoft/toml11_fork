@@ -1571,6 +1571,19 @@ class basic_value
         }
         return this->as_table(std::nothrow)[k];
     }
+    const value_type&       operator[](const key& k) const
+    {
+        if(this->is_uninitialized())
+        {
+            *this = table_type{};
+        }
+        else if(!this->is_table()) // initialized, but not a table
+        {
+            detail::throw_bad_cast<value_t::table>(
+                "toml::value::operator[](key): ", this->type_, *this);
+        }
+        return this->as_table(std::nothrow)[k];
+    }
 
     value_type&       at(const std::size_t idx)
     {
